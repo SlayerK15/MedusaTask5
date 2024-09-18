@@ -1,9 +1,7 @@
 provider "aws" {
-  region     = "ap-south-1"
+  region = "ap-south-1"
 }
 
-variable "aws_access_key" {}
-variable "aws_secret_key" {}
 variable "ec2_private_key" {}
 
 resource "aws_instance" "medusa_ec2" {
