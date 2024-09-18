@@ -8,7 +8,6 @@ variable "ec2_private_key" {
 }
 
 resource "aws_instance" "medusa_ec2" {
-  ami                    = "ami-0c2af51e265bd5e0e"
   instance_type          = "t2.small"
   key_name               = "Kt5"
   vpc_security_group_ids = ["sg-0da7a1cd89d513cb5"]
