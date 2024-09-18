@@ -4,7 +4,6 @@ provider "aws" {
 
 variable "ec2_private_key" {
   type      = string
-  sensitive = true
 }
 
 resource "aws_instance" "medusa_ec2" {
