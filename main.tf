@@ -2,7 +2,10 @@ provider "aws" {
   region = "ap-south-1"
 }
 
-variable "ec2_private_key" {}
+variable "ec2_private_key" {
+  type      = string
+  sensitive = true
+}
 
 resource "aws_instance" "medusa_ec2" {
   ami                    = "ami-0c2af51e265bd5e0e"
