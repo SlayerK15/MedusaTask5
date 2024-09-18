@@ -6,6 +6,14 @@ variable "ec2_private_key" {
   type      = string
 }
 
+variable "aws_access_key_id" {
+  type      = string
+}
+
+variable "aws_secret_access_key" {
+  type      = string
+}
+
 resource "aws_instance" "medusa_ec2" {
   ami                    = "ami-0c2af51e265bd5e0e"
   instance_type          = "t2.micro"
