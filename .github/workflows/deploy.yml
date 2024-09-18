@@ -11,36 +11,35 @@ jobs:
 
     steps:
       - name: Checkout Code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v3
 
-      - name: Install Terraform
-        run: |
-          sudo apt-get update && sudo apt-get install -y unzip
-          wget https://releases.hashicorp.com/terraform/0.13.7/terraform_0.13.7_linux_amd64.zip
-          unzip terraform_0.13.7_linux_amd64.zip
-          sudo mv terraform /usr/local/bin/
-          terraform -version
+      - name: Set up Terraform
+        uses: hashicorp/setup-terraform@v2
+        with:
+          terraform_wrapper: false
 
-      - name: Initialize Terraform
+      - name: Terraform Init
         run: terraform init
 
       - name: Terraform Plan
         env:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-        run: terraform plan -out tfplan -var "aws_access_key=${{ secrets.AWS_ACCESS_KEY_ID }}" -var "aws_secret_key=${{ secrets.AWS_SECRET_ACCESS_KEY }}" -var "ec2_private_key=${{ secrets.EC2_SSH_KEY }}"
+          TF_VAR_ec2_private_key: ${{ secrets.EC2_SSH_KEY }}
+        run: terraform plan -out=tfplan
 
       - name: Terraform Apply
         env:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          TF_VAR_ec2_private_key: ${{ secrets.EC2_SSH_KEY }}
         run: terraform apply -auto-approve tfplan
 
       - name: Get EC2 Public IP
         id: get_ip
         run: echo "ec2_public_ip=$(terraform output -raw ec2_public_ip)" >> $GITHUB_OUTPUT
 
-      - name: Wait for EC2 to be ready
+      - name: Wait for EC2 to be Ready
         run: sleep 60
 
       - name: Add SSH Key
