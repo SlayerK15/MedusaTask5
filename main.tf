@@ -41,6 +41,8 @@ resource "aws_instance" "medusa_ec2" {
       private_key = var.ec2_private_key
       host        = self.public_ip
     }
+
+    timeout = "30m"
   }
 }
 
